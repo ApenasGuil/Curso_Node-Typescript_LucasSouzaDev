@@ -5,6 +5,7 @@ import tseslint from "typescript-eslint";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
+  {rules: ["@typescript-eslint/no-empty-interface": "off"]}
   {files: ["**/*.{js,mjs,cjs,ts}"]},
   {languageOptions: { globals: globals.node }},
   pluginJs.configs.recommended,
