@@ -3,14 +3,14 @@ import * as yup from "yup";
 import { validation } from "../../shared/middlewares";
 import { StatusCodes } from "http-status-codes";
 
-interface iQueryProps {
+interface IQueryProps {
     page?: number;
     limit?: number;
     filter?: string;
 }
 
 export const getAllValidation = validation((getSchema) => ({
-    query: getSchema<iQueryProps>(yup.object().shape({
+    query: getSchema<IQueryProps>(yup.object().shape({
         page: yup.number().optional().moreThan(0),
         limit: yup.number().optional().moreThan(0),
         filter: yup.string().optional(),
@@ -18,7 +18,7 @@ export const getAllValidation = validation((getSchema) => ({
 }));
 
 export const getAll: RequestHandler = async (
-    req: Request<{}, {}, {}, iQueryProps>,
+    req: Request<{}, {}, {}, IQueryProps>,
     res: Response
 ) => {
     console.log(req.query);
