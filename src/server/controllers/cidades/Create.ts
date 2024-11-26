@@ -1,26 +1,34 @@
 import { Request, Response } from "express";
-import { StatusCodes } from 'http-status-codes';
+import { StatusCodes } from "http-status-codes";
 import * as yup from "yup";
 
 interface ICidade {
     name: string;
+    lastName: string;
 }
 
-const dataValidation: yup.ISchema<ICidade> = yup.object().shape({
+const dataValidation: yup.ObjectSchema<ICidade> = yup.object().shape({
     name: yup.string().required().min(3),
+    lastName: yup.string().required().min(3),
 });
 
 export const create = async (req: Request<{}, {}, ICidade>, res: Response) => {
     let validatedData: ICidade | undefined = undefined;
     try {
-        validatedData = await dataValidation.validate(req.body);
-    } catch (error) {
-        const yupError = error as yup.ValidationError;
+        validatedData = await dataValidation.validate(req.body, {
+            abortEarly: false,
+        });
+    } catch (err) {
+        const yupError = err as yup.ValidationError;
+        const errors: Record<string, string> = {};
 
-        return res.status(StatusCodes.NOT_ACCEPTABLE).json({
-            errors: {
-                default: yupError.message
-            }
+        yupError.inner.forEach((error) => {
+            if (error.path === undefined) return;
+            errors[error.path] = error.message;
+        });
+
+        return res.status(StatusCodes.BAD_REQUEST).json({ 
+            errors,
         });
     }
 
