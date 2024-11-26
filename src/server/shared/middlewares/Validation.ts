@@ -1,12 +1,14 @@
 import { RequestHandler } from "express";
+import { AnyObject, Maybe, ObjectSchema, ValidationError } from 'yup';
 import { StatusCodes } from "http-status-codes";
-import * as yup from 'yup';
 
 type TProperty = "body" | "header" | "params" | "query";
 
-type TGetSchema = <T extends yup.Maybe<yup.AnyObject>>(schema: yup.ObjectSchema<T>) => yup.ObjectSchema<T>;
+// type TGetSchema = <T extends yup.Maybe<yup.AnyObject>>(schema: yup.ObjectSchema<T>) => yup.ObjectSchema<T>;
 
-type TAllSchemas = Record<TProperty, yup.ObjectSchema<any>>;
+type TGetSchema = <T extends Maybe<AnyObject>>(schema: ObjectSchema<T>) => ObjectSchema<T>;
+
+type TAllSchemas = Record<TProperty, ObjectSchema<any>>;
 
 type TGetAllSchemas = (getSchema: TGetSchema) => Partial<TAllSchemas>;
 
@@ -22,7 +24,7 @@ export const validation: TValidation = (getAllSchemas) => async (req, res, next)
                 abortEarly: false,
             });
         } catch (err) {
-            const yupError = err as yup.ValidationError;
+            const yupError = err as ValidationError;
             const errors: Record<string, string> = {};
 
             yupError.inner.forEach((error) => {

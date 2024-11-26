@@ -157,7 +157,7 @@ src/controllers/cidades/Create.ts
 
 ```typescript
 export const create = (req: Request, res: Response) => {
-    return res.send('Message from controller: Created!');
+    return res.send("Message from controller: Created!");
 };
 ```
 
@@ -167,7 +167,7 @@ src/controllers/cidades/index.ts
 Encapsula os métodos via spread
 
 ```typescript
-import * as create from './Create';
+import * as create from "./Create";
 
 export const CidadesController = {
     ...create,
@@ -185,7 +185,7 @@ export { * } from './cidades';
 ↓ Emporta no routes/index.ts v
 
 ```typescript
-import { CidadesController } from './../controllers';
+import { CidadesController } from "./../controllers";
 ```
 
 E assim usar o CidadesController.create, que é método exportado em cascata
@@ -250,7 +250,7 @@ validatedData = await dataValidation.validate(req.body, { abortEarly: false });
 
 <small>AbortEarly: false = Não para antes de validar todos os dados enviados, para retornar ao usuário todos os erros de uma vez (Obj)</small>
 
-#####
+##### Validação
 
 Validação de vários campos de uma vez, e retornar no Response
 
@@ -279,58 +279,113 @@ try {
 -   /src/server/shared/services/YupTranslation.ts
 
 ```typescript
-
-import { setLocale } from 'yup';
+import { setLocale } from "yup";
 
 setLocale({
     mixed: {
-        required: 'Este campo é obrigatório',
-        notType: 'Formato digitado é invalido',
-        defined: 'Este campo precisa ter um valor definido',
-        oneOf: 'Deve ser um dos seguintes valores: ${values}',
-        notOneOf: 'Não pode ser um dos seguintes valores: ${values}',
+        required: "Este campo é obrigatório",
+        notType: "Formato digitado é invalido",
+        defined: "Este campo precisa ter um valor definido",
+        oneOf: "Deve ser um dos seguintes valores: ${values}",
+        notOneOf: "Não pode ser um dos seguintes valores: ${values}",
     },
     string: {
-        lowercase: 'Deve estar em maiúsculo',
-        uppercase: 'Deve estar em minúsculo',
-        url: 'Deve ter um formato de URL válida',
-        max: 'Deve ter no máximo ${max} caracteres',
-        min: 'Deve ter pelo menos ${min} caracteres',
-        email: 'Formato de e-mail digitado não é valido',
-        length: 'Deve ter exatamente ${length} caracteres',
-        uuid: 'Valor digitado não confere a um UUID valido',
-        trim: 'Não deve conter espaços no início ou no fim.',
-        matches: 'O valor deve corresponder ao padrão: ${regex}',
+        lowercase: "Deve estar em maiúsculo",
+        uppercase: "Deve estar em minúsculo",
+        url: "Deve ter um formato de URL válida",
+        max: "Deve ter no máximo ${max} caracteres",
+        min: "Deve ter pelo menos ${min} caracteres",
+        email: "Formato de e-mail digitado não é valido",
+        length: "Deve ter exatamente ${length} caracteres",
+        uuid: "Valor digitado não confere a um UUID valido",
+        trim: "Não deve conter espaços no início ou no fim.",
+        matches: "O valor deve corresponder ao padrão: ${regex}",
     },
     number: {
-        min: 'Deve ser no mínimo ${min}',
-        max: 'Deve ser no máximo ${max}',
-        integer: 'Deve ser um número inteiro',
-        lessThan: 'Deve ser menor que ${less}',
-        moreThan: 'Deve ser maior que ${more}',
-        positive: 'Deve ser um número positivo',
-        negative: 'Deve ser um número negativo',
+        min: "Deve ser no mínimo ${min}",
+        max: "Deve ser no máximo ${max}",
+        integer: "Deve ser um número inteiro",
+        lessThan: "Deve ser menor que ${less}",
+        moreThan: "Deve ser maior que ${more}",
+        positive: "Deve ser um número positivo",
+        negative: "Deve ser um número negativo",
     },
     date: {
-        min: 'Deve ser maior que a data ${min}',
-        max: 'Deve ser menor que a data ${max}',
+        min: "Deve ser maior que a data ${min}",
+        max: "Deve ser menor que a data ${max}",
     },
     array: {
-        min: 'Deve ter no mínimo ${min} itens',
-        max: 'Deve ter no máximo ${max} itens',
-        length: 'Deve conter exatamente ${length} itens',
+        min: "Deve ter no mínimo ${min} itens",
+        max: "Deve ter no máximo ${max} itens",
+        length: "Deve conter exatamente ${length} itens",
     },
     object: {
-        noUnknown: 'Deve ser passado um valor definido',
+        noUnknown: "Deve ser passado um valor definido",
     },
 });
-
 ```
 
-
 -   /src/server/Server.ts
+
 ```typescript
-import './shared/services/YupTranslation';
+import "./shared/services/YupTranslation";
 ```
 
 <small>Realizar a importação do arquivo de tradução (Antes da importação das Rotas)</small>
+
+##### Middleware
+
+/src/shared/middlewares/Validation.ts
+
+```typescript
+// Basicamente mover o Try-Catch para o arquivo de middleware e vincular ao controller
+export const validation: TValidation =
+    (getAllSchemas) => async (req, res, next) => {
+        const schemas = getAllSchemas((schema) => schema);
+        const errorsResult: Record<string, Record<string, string>> = {};
+
+        Object.entries(schemas).forEach(([key, schema]) => {
+            try {
+                schema.validateSync(req[key as TProperty], {
+                    abortEarly: false,
+                });
+            } catch (err) {
+                const yupError = err as ValidationError;
+                const errors: Record<string, string> = {};
+
+                yupError.inner.forEach((error) => {
+                    if (error.path === undefined) return;
+                    errors[error.path] = error.message;
+                });
+
+                errorsResult[key] = errors;
+            }
+        });
+
+        if (Object.entries(errorsResult).length === 0) {
+            return next();
+        } else {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                errors: errorsResult,
+            });
+        }
+    };
+```
+
+```typescript
+// Enviando o Schema do objeto que queremos validar para a função do middleware, onde lá teremos o next()
+export const createValidation = validation((getSchema) => ({
+    body: getSchema<ICidade>(
+        yup.object().shape({
+            name: yup.string().required().min(3),
+            lastName: yup.string().required().min(3),
+        })
+    ),
+    query: getSchema<IFilter>(
+        yup.object().shape({
+            filter: yup.string().min(3),
+        })
+    ),
+}));
+```
+
