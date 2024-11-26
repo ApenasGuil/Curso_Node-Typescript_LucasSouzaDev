@@ -1,14 +1,19 @@
 import { RequestHandler } from "express";
 import { StatusCodes } from "http-status-codes";
-import { ObjectSchema, ValidationError } from "yup";
+import * as yup from 'yup';
 
 type TProperty = "body" | "header" | "params" | "query";
 
-type TAllSchemas = Record<TProperty, ObjectSchema<any>>;
+type TGetSchema = <T extends yup.Maybe<yup.AnyObject>>(schema: yup.ObjectSchema<T>) => yup.ObjectSchema<T>;
 
-type TValidation = (schemas: Partial<TAllSchemas>) => RequestHandler;
+type TAllSchemas = Record<TProperty, yup.ObjectSchema<any>>;
 
-export const validation: TValidation = (schemas) => async (req, res, next) => {
+type TGetAllSchemas = (getSchema: TGetSchema) => Partial<TAllSchemas>;
+
+type TValidation = (getAllSchemas: TGetAllSchemas) => RequestHandler;
+
+export const validation: TValidation = (getAllSchemas) => async (req, res, next) => {
+    const schemas = getAllSchemas(schema => schema);
     const errorsResult: Record<string, Record<string, string>> = {};
 
     Object.entries(schemas).forEach(([key, schema]) => {
@@ -17,7 +22,7 @@ export const validation: TValidation = (schemas) => async (req, res, next) => {
                 abortEarly: false,
             });
         } catch (err) {
-            const yupError = err as ValidationError;
+            const yupError = err as yup.ValidationError;
             const errors: Record<string, string> = {};
 
             yupError.inner.forEach((error) => {
