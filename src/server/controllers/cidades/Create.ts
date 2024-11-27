@@ -19,5 +19,5 @@ export const create: RequestHandler = async (
 ) => {
     console.log(req.body);
 
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Não implementado! Create");
+    return res.status(StatusCodes.CREATED).json(1);
 };
