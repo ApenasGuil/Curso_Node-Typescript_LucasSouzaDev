@@ -26,5 +26,5 @@ export const updateById: RequestHandler = async (
     console.log(req.body);
     console.log(req.params);
 
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Não implementado!");
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Não implementado! UpdateById");
 };

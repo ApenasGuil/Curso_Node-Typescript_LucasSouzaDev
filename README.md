@@ -389,3 +389,64 @@ export const createValidation = validation((getSchema) => ({
 }));
 ```
 
+##### Setup do Jest (Automatizando testes)
+
+npm install jest ts-jest @types/jest
+
+-   jest: Biblioteca em sí
+-   ts-jest: Integração do Jest com Typescript
+-   @types/jest: Acessar métodos de forma global no projeto sem dar erro de tipagem
+
+npm jest --init
+
+/jest.configs.ts
+
+```typescript
+//Descomentar e deixar apenas json
+    coverageReporters: [
+        "json",
+    ],
+
+[...]
+
+//Criar o arquivo abaixo
+    setupFilesAfterEnv: [
+        './tests/jest.setup.ts'
+    ],
+
+[...]
+
+    testMatch: [
+        '<rootDir>/tests/**/*.test.ts'
+    ],
+
+[...]
+
+    transform: {
+        '^.+\\.(ts|tsx)$': 'ts-jest'
+    },
+```
+
+<small>Adicionar '/coverage' ao .gitignore</small>
+
+    yarn add -D supertest @types/supertest
+
+Testa o servidor inteiro do Express
+
+```typescript
+///tests/jest.setup.ts
+import supertest from "supertest";
+import { server } from "../src/server/Server";
+
+export const testServer = supertest(server);
+```
+
+```typescript
+//tsconfig.json (Exclude para ignorar a compilação dos testes)
+"exclude": [
+    "./jest.config.ts",
+    "./node_modules",
+    "./tests",
+    "./build",
+  ]
+```

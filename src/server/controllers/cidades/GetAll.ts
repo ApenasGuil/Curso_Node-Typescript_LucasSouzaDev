@@ -23,5 +23,5 @@ export const getAll: RequestHandler = async (
 ) => {
     console.log(req.query);
 
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Não implementado!");
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Não implementado! GetAll");
 };
