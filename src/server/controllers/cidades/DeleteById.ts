@@ -13,11 +13,25 @@ export const deleteByIdValidation = validation((getSchema) => ({
     })),
 }));
 
+// export const deleteById: RequestHandler = async (
+//     req: Request<{}, {}, {}, IParamProps>,
+//     res: Response
+// ) => {
+//     console.log(req.params);
+
+//     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Não implementado! DeleteById");
+// };
+
+// TEMP: Apenas à modo de teste com o Jest, assim que tiver o banco, utilizar o código correto
 export const deleteById: RequestHandler = async (
-    req: Request<{}, {}, {}, IParamProps>,
+    req: Request<IParamProps>,
     res: Response
 ) => {
-    console.log(req.params);
+    if (Number(req.params.id) === 99999) return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        errors: {
+            default: 'Registro não encontrado'
+        }
+    })
 
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send("Não implementado! DeleteById");
+    return res.status(StatusCodes.NO_CONTENT).send();
 };

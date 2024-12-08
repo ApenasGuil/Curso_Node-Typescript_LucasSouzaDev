@@ -487,5 +487,7 @@ describe("Cidades - Create", () => {
 ```
 
     npm run test
+    ( "test": "jest" )
+
 Ao rodar os testes, o jest simula que a rota é chamada e o dado fictício é enviado (via .send)
 
