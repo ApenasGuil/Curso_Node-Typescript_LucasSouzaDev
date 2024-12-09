@@ -1,3 +1,16 @@
+Índice de Comandos:
+1. [yarn init](#yarn-init) : Gera um arquivo package.json no diretório atual, contendo informações básicas do projeto.
+2. [express](#express) : Instala o pacote express.
+3. [typescript](#typescript) : Instala typescript como uma dependência para escrever código em TypeScript.
+4. [http-status-codes](#http-status-codes) : Instala o pacote http-status-codes, que fornece constantes para códigos de status HTTP (como 200, 404, etc.).
+5. [types-http-status-codes](#types-http-status-codes) : Instala as definições de tipos para o pacote http-status-codes para uso com TypeScript.
+6. [dotenv](#dotenv) : Instala o pacote dotenv, usado para carregar variáveis de ambiente de um arquivo .env para o process.env.
+7. [tsc init](#tsc-init) : Gera um arquivo tsconfig.json com configurações padrão para projetos TypeScript.
+8. [yup](#yup) : Instala o pacote yup (uma biblioteca para validação de esquemas de objetos) usando o npm (alternativa ao Yarn).
+9. [jest](#jest) : Instala o framework de testes jest.
+10. [jest init](#jest-init) : Inicializa a configuração do Jest, uma biblioteca de testes para JavaScript e TypeScript.
+10. [supertest](#supertest) : Instala o pacote supertest, usado para realizar testes de integração em aplicativos web.
+
 ## Endpoints
 
 ---
@@ -33,17 +46,23 @@
 
 ## Commands
 
-### yarn init
+<a id="yarn-init">yarn init</a>
 
--   Inicialização
+- Descrição: Inicializa um novo projeto gerando um arquivo package.json no diretório atual. Esse arquivo contém informações básicas do projeto.
+- Interatividade: Geralmente pede informações como nome do projeto, versão, autor, etc.
 
-### yarn add express
+<a id="express">yarn add express</a>
 
--   Facilita criação de API REST
+- Descrição: Instala o pacote express, um framework de servidor web para Node.js que facilita a criação de API Rest.
+- Resultado: Adiciona o express à seção "dependencies" do package.json.
 
-### yarn add -D typescript @type/express ts-node-dev
+<a id="typescript">yarn add -D typescript @type/express ts-node-dev</a>
 
--   Instala typescript como desenvolvimento, a tipagem do express para vscode e o ts-node-dev para rodar arquivos pelo CMD
+- Descrição:
+    - Instala typescript como uma dependência de desenvolvimento para escrever código em TypeScript.
+    - Instala @types/express para suporte de tipagem do Express em projetos TypeScript.
+    - Instala ts-node-dev, uma ferramenta para rodar projetos TypeScript com reinicialização automática em alterações.
+- Resultado: Dependências adicionadas à seção "devDependencies" no package.json.
 
 ### /src
 
@@ -95,8 +114,15 @@ router.post("/teste/:id", (req, res) => {
 
 ##### Traduz os códigos de status
 
-yarn add http-status-codes
-yarn add -D @types/http-status-codes
+<a id="http-status-codes">yarn add http-status-codes</a>
+
+- Descrição: Instala o pacote http-status-codes, que fornece constantes para códigos de status HTTP (como 200, 404, etc.).
+- Resultado: Adiciona o pacote à seção "dependencies" do package.json.
+
+<a id="types-http-status-codes">yarn add -D @types/http-status-codes</a>
+
+- Descrição: Instala as definições de tipos para o pacote http-status-codes para uso com TypeScript.
+- Resultado: Adiciona o pacote à seção "devDependencies" no package.json.
 
 ```typescript
 import { StatusCodes } from 'http-status-codes';
@@ -108,7 +134,10 @@ return res.status(StatusCodes.NOT_ACCEPTABLE).json({})
 
 ##### .env
 
-yarn add dotenv
+<a id="dotenv">yarn add dotenv</a>
+
+- Descrição: Instala o pacote dotenv, usado para carregar variáveis de ambiente de um arquivo .env para o process.env.
+- Resultado: Adiciona o pacote à seção "dependencies" do package.json.
 
 import 'dotenv/config';
 
@@ -117,7 +146,10 @@ import 'dotenv/config';
 
 ##### Compilar TS para JS (tsc)
 
-yarn tsc --init
+<a id="tsc-init">yarn tsc --init</a>
+
+- Descrição: Gera um arquivo tsconfig.json com configurações padrão para projetos TypeScript.
+- Resultado: Cria o arquivo tsconfig.json no diretório atual.
 
 Cria-se o tsconfig.json, que é o arquivos de configuração do compilador
 
@@ -219,9 +251,12 @@ export const create = (req: Request<{}, {}, ICidade>, res: Response) => {
 
 <a href="https://npmjs.com/package/yup">npmjs.com/package/yup</a>
 
-npm add yup
+<a id="yup">npm add yup</a>
 
--   Vincular a interface ao YUP para melhor controle das regras de validação
+- Descrição: Instala o pacote yup (uma biblioteca para validação de esquemas de objetos) usando o npm (alternativa ao Yarn).
+- Resultado: Adiciona yup à seção "dependencies" do package.json.
+
+Vincular a interface ao YUP para melhor controle das regras de validação
 
 ```typescript
 interface ICidade {
@@ -391,13 +426,18 @@ export const createValidation = validation((getSchema) => ({
 
 ##### Setup do Jest (Automatizando testes)
 
-npm install jest ts-jest @types/jest
+<a id="jest">npm install jest ts-jest @types/jest</a>
 
--   jest: Biblioteca em sí
--   ts-jest: Integração do Jest com Typescript
--   @types/jest: Acessar métodos de forma global no projeto sem dar erro de tipagem
+- Descrição:
+    - Instala o framework de testes jest.
+    - Instala ts-jest, um utilitário para integrar o Jest com TypeScript.
+    - Instala @types/jest, que fornece definições de tipos para Jest, úteis em projetos TypeScript.
+- Resultado: Adiciona essas dependências ao projeto, geralmente na seção "devDependencies" do package.json.
 
-npm jest --init
+<a id="jest-init">npm jest --init</a>
+
+- Descrição: Inicializa a configuração do Jest, uma biblioteca de testes para JavaScript e TypeScript.
+- Resultado: Cria um arquivo de configuração (jest.config.js ou .json) para o Jest.
 
 /jest.configs.ts
 
@@ -429,7 +469,12 @@ npm jest --init
 
 <small>Adicionar '/coverage' ao .gitignore</small>
 
-    yarn add -D supertest @types/supertest
+<a id="supertest">yarn add -D supertest @types/supertest</a>
+
+- Descrição:
+    - Instala o pacote supertest, usado para realizar testes de integração em aplicativos web.
+    - Instala as definições de tipos de supertest para uso com TypeScript.
+- Resultado: Ambos os pacotes são adicionados à seção "devDependencies" no package.json.
 
 Testa o servidor inteiro do Express
 
