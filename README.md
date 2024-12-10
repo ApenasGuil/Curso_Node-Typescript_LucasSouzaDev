@@ -6,10 +6,11 @@
 5. [types-http-status-codes](#types-http-status-codes) : Instala as definições de tipos para o pacote http-status-codes para uso com TypeScript.
 6. [dotenv](#dotenv) : Instala o pacote dotenv, usado para carregar variáveis de ambiente de um arquivo .env para o process.env.
 7. [tsc init](#tsc-init) : Gera um arquivo tsconfig.json com configurações padrão para projetos TypeScript.
-8. [yup](#yup) : Instala o pacote yup (uma biblioteca para validação de esquemas de objetos) usando o npm (alternativa ao Yarn).
-9. [jest](#jest) : Instala o framework de testes jest.
-10. [jest init](#jest-init) : Inicializa a configuração do Jest, uma biblioteca de testes para JavaScript e TypeScript.
-10. [supertest](#supertest) : Instala o pacote supertest, usado para realizar testes de integração em aplicativos web.
+8. [tsc](#tsc) : Executa o compilador TypeScript (tsc) para transpilar os arquivos .ts para JavaScript, conforme configurado no arquivo tsconfig.json.
+9. [yup](#yup) : Instala o pacote yup (uma biblioteca para validação de esquemas de objetos) usando o npm (alternativa ao Yarn).
+10. [jest](#jest) : Instala o framework de testes jest.
+11. [jest init](#jest-init) : Inicializa a configuração do Jest, uma biblioteca de testes para JavaScript e TypeScript.
+12. [supertest](#supertest) : Instala o pacote supertest, usado para realizar testes de integração em aplicativos web.
 
 ## Endpoints
 
@@ -163,6 +164,12 @@ Mantendo a arquitetura de diretórios
 Definir a pasta onde estão os TS que queremos compilar
 
     "rootDir": "./src",
+
+<a id="tsc">yarn tsc</a>
+
+-   Descrição: Executa o compilador TypeScript (tsc) para transpilar os arquivos .ts para JavaScript, conforme configurado no arquivo tsconfig.json.
+
+-   Resultado: Gera arquivos .js (e possivelmente .d.ts, se configurado) a partir do código TypeScript no diretório de saída especificado no tsconfig.json (por padrão, dist ou o mesmo diretório dos arquivos .ts).
 
 ##### src/server/Controllers, Database, Shared
 
