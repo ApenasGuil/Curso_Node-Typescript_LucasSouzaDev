@@ -17,7 +17,8 @@
   "scripts": {
     "dev": "ts-node-dev ./src/index.ts",
     "test": "jest",
-    "tsc": "tsc"
+    "build": "tsc",
+    "start": "node build/server.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",

@@ -545,5 +545,53 @@ Ao rodar os testes, o jest simula que a rota é chamada e o dado fictício é en
 
 ## Deploy
 
-### Configuração do Deploy
+### Configuração do Deploy (Vercel)
+
+```json
+    "build": "tsc",
+    "start": "node build/server.js" //confirmar o outDir do tsconfig.json
+```
+
+`npm install -g vercel` Necessário instalar o Vercel globalmente na máquina
+
+```cmd
+    vercel
+    Vercel CLI 39.2.0
+    Log in to Vercel Continue with GitHub
+    Set up and deploy “C:\projetos-react\curso-node-typescript”? yes
+    Which scope should contain your project? Guilherme's projects
+    Link to existing project? no
+    What’s your project’s name? curso-node     
+    In which directory is your code located? ./
+    Local settings detected in vercel.json:
+    No framework detected. Default Project Settings:
+    - Build Command: `npm run vercel-build` or `npm run build`
+    - Development Command: None
+    - Install Command: `yarn install`, `pnpm install`, `npm install`, or `bun install`
+    - Output Directory: `public` if it exists, or `.`
+    ? Want to modify these settings? no
+```
+
+```json
+// ./vercel.json
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "./build/index.js",
+            "use": "@now/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/build/index.js"
+        }
+    ]
+}
+```
+
+`vercel` Criar uma Preview do projeto
+
+`vercel --prod` Envia para produção
 
