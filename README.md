@@ -690,3 +690,43 @@ export enum ETableNames {
     "knex:migrate": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:latest",
     "knex:seed": "knex --knexfile ./src/server/database/knex/Environment.ts seed:run"
 ```
+
+## Interfaces das entidades do banco (tabelas)
+
+```ts
+declare module  'knex/types/tables' {
+    interface Tables {
+        //cidade: ICidade
+        //pessoa: IPesoa
+        //usuario: IUsuario
+    }
+}
+```
+
+Arquivo Cidade.ts em database/models
+
+```ts
+// Definir todas as colunas da tabela
+export interface ICidade {
+    id: number;
+    name: string
+}
+```
+
+Arquivo index.ts em dataase/models
+Para facilitar o export as models
+
+```ts
+export * from './Cidade';
+```
+
+#### Extendendo a model no IBodyProps
+
+Para que a controller utilize a mesma entidade do /models
+
+```ts
+// Arquivos onde seja realizado qualquer inserção de dados que possa pedir o ID (que não é necessário pois é auto_increment)
+
+interface IBodyProps extends Omit<ICidade, 'id'> {}
+// Extende o ICidade (/models), porém omite o campo 'id', desabilitando a solicitação do mesmo
+```
