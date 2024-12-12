@@ -597,6 +597,13 @@ Ao rodar os testes, o jest simula que a rota é chamada e o dado fictício é en
 
 ## Banco de Dados
 
+    Adicionar "*.sqlite" ao .gitignore
+
+Extensão do VSCode: SQLite
+(https://marketplace.visualstudio.com/items?itemName=alexcvzz.vscode-sqlite)
+
+Botão direito no arquivo .sqlite -> "Open Database" -> Abre uma janela abaixo dos arquivos do projeto com informações do banco
+
 ### Knex
 
 `yarn install knex`
@@ -604,7 +611,7 @@ Ao rodar os testes, o jest simula que a rota é chamada e o dado fictício é en
 Desenvolvimento: SQLite
 Produção: PostgreSQL
 
-`yarn install -D sqlite`
+`yarn install -D sqlite3`
 
 #### Arquivos de config do Knex
 
@@ -618,3 +625,68 @@ Arquivo de config de ambiente
 
 Em produção, muda para a conexão com o PG
 Arquivo index = exportar a instancia, conexão de fato com o banco (PG ou SQLite)
+
+### Criando migration com Knex
+
+`yarn knex --knexfile ./src/server/database/knex/Environment.ts migrate:make teste`
+
+```typescript
+// Arquitetura básica da migration
+import type { Knex } from "knex";
+
+
+export async function up(knex: Knex) {
+}
+
+
+export async function down(knex: Knex) {
+}
+```
+
+```typescript
+// migrations/0000_create_cidades.ts
+import type { Knex } from "knex";
+import { ETableNames } from "../ETableNames";
+
+export async function up(knex: Knex) {
+    return knex
+        .schema
+        .createTable(ETableNames.cidade, (table) => {
+            table.bigIncrements("id").primary().index();
+            table.string("name", 150).index().notNullable();
+
+            table.comment("Tabela usada para armazenar cidades no sistema.");
+        })
+        .then(() => {
+            console.log(`# Created table ${ETableNames.cidade}`);
+        });
+}
+
+export async function down(knex: Knex) {
+    return knex
+    .schema
+    .dropTable(ETableNames.cidade)
+    .then(() => {
+        console.log(`# Dropped table ${ETableNames.cidade}`);
+    });
+}
+
+```
+
+```typescript
+// migrations/ETableNames.ts
+// Arquivo utilizado para prevenir que o nome das tabelas sejam escritas errada
+export enum ETableNames {
+    cidade = 'cidade'
+}
+```
+
+### Testando migrations
+
+```json
+    // Simplificando os comandos do Knex usando o package.json
+    "knex:rollback-all": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollbback --all",
+    "knex:rollback": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback",
+    "knex:migrate": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:latest",
+    "knex:seed": "knex --knexfile ./src/server/database/knex/Environment.ts seed:run"
+```
