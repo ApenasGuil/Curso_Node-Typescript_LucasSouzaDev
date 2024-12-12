@@ -595,3 +595,26 @@ Ao rodar os testes, o jest simula que a rota é chamada e o dado fictício é en
 
 `vercel --prod` Envia para produção
 
+## Banco de Dados
+
+### Knex
+
+`yarn install knex`
+
+Desenvolvimento: SQLite
+Produção: PostgreSQL
+
+`yarn install -D sqlite`
+
+#### Arquivos de config do Knex
+
+./database/knex
+
+Dentro dessa pasta:
+Arquivo de config de ambiente
+1. Ambiente de desenvolvimento
+2. Ambiente de teste
+3. Ambiente de produção
+
+Em produção, muda para a conexão com o PG
+Arquivo index = exportar a instancia, conexão de fato com o banco (PG ou SQLite)
