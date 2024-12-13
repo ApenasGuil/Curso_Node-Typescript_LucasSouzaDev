@@ -786,6 +786,7 @@ table.string("name", 150).checkLength('<=', 150).index().notNullable();
 Arrumando os testes do Jest para rodar no SQLite em memória
 
 ```ts
+// ./tests/jest.setup.ts
 // Espera o Knex realizar o migrate antes de rodar os testes
 beforeAll(async () => {
     await Knex.migrate.latest();
@@ -795,4 +796,10 @@ beforeAll(async () => {
 afterAll(async () => {
     await Knex.destroy();
 });
+```
+
+### Criando os outros providers (#24 - Finalizando provider de cidade)
+
+```ts
+
 ```
