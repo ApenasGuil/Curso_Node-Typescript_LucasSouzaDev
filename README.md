@@ -780,3 +780,19 @@ name: yup.string().required().min(3).max(150)
 // Migration => Knex
 table.string("name", 150).checkLength('<=', 150).index().notNullable();
 ```
+
+### Knex em memória para jest
+
+Arrumando os testes do Jest para rodar no SQLite em memória
+
+```ts
+// Espera o Knex realizar o migrate antes de rodar os testes
+beforeAll(async () => {
+    await Knex.migrate.latest();
+});
+
+// Finaliza conexões com o Knex após os testes
+afterAll(async () => {
+    await Knex.destroy();
+});
+```

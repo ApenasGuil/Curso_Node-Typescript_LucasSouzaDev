@@ -23,7 +23,8 @@
     "knex:rollback-all": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollbback --all",
     "knex:rollback": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback",
     "knex:migrate": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:latest",
-    "knex:seed": "knex --knexfile ./src/server/database/knex/Environment.ts seed:run"
+    "knex:seed": "knex --knexfile ./src/server/database/knex/Environment.ts seed:run",
+    "knex:rm": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback && knex --knexfile ./src/server/database/knex/Environment.ts migrate:latest"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
