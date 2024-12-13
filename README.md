@@ -379,6 +379,10 @@ import "./shared/services/YupTranslation";
 
 /src/shared/middlewares/Validation.ts
 
+`Reassistir aula #12:`
+-   API Rest, Node e Typescript: #12 - Melhorando a construção das validações
+-   https://www.youtube.com/watch?v=dC3ID_Zu2nI&list=PL29TaWXah3iaaXDFPgTHiFMBF6wQahurP&index=14
+
 ```typescript
 // Basicamente mover o Try-Catch para o arquivo de middleware e vincular ao controller
 export const validation: TValidation =
@@ -729,4 +733,50 @@ Para que a controller utilize a mesma entidade do /models
 
 interface IBodyProps extends Omit<ICidade, 'id'> {}
 // Extende o ICidade (/models), porém omite o campo 'id', desabilitando a solicitação do mesmo
+```
+
+### Providers (#22 - Criando provider para cidade)
+
+`Provider é o método que faz de fato a inserção do dado no banco de dados.
+O Controller faz o controle dos dados que chegam no Provider`
+
+Create.ts em database/providers/cidades
+
+```ts
+import { ICidade } from "../../models";
+import { Knex } from "../../knex";
+import { ETableNames } from "../../ETableNames";
+
+export const create = async (
+    cidade: Omit<ICidade, "id">
+): Promise<number | Error> => {
+    try {
+        const [result] = await Knex(ETableNames.cidade)
+            .insert(cidade)
+            .returning("id");
+
+        if (typeof result === "object") {
+            return result.id;
+        } else if (typeof result === "number") {
+            return result;
+        }
+
+        return new Error("Erro ao cadastrar o registro!");
+    } catch (error) {
+        console.error(error);
+        return new Error("Erro ao cadastrar o registro!");
+    }
+};
+```
+
+Alterado o max() via YUP do controller,
+Combinando com a Migration do Knex
+Para que haja um double-check dos caracteres
+
+```ts
+// Controller => YUP
+name: yup.string().required().min(3).max(150)
+
+// Migration => Knex
+table.string("name", 150).checkLength('<=', 150).index().notNullable();
 ```
