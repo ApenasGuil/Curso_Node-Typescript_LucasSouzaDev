@@ -1,3 +1,17 @@
-import { server } from './server/Server';
+import { Knex } from "./server/database/knex";
+import { server } from "./server/Server";
 
-server.listen(process.env.PORT, () => console.log('Backend rodando.'));
+const startServer = () => {
+    server.listen(process.env.PORT, () => console.log("Backend rodando."));
+};
+
+if (process.env.IS_LOCALHOST !== 'true') {
+Knex.migrate
+    .latest()
+    .then(() => {
+        startServer();
+    })
+    .catch(console.log);
+} else { 
+    startServer();
+}
