@@ -820,5 +820,7 @@ export const count = async (filter = ''): Promise<number | Error> => {
 };
 ```
 
-### Refatorando Controller e vinculando às Providers
+### Refatorando Controller e vinculando às Providers (#25 - Refatorando a controller de cidade)
+
+### Seeds (#27 - Adicionar seed para cidades)
 
