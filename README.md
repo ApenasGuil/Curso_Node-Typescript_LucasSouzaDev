@@ -822,5 +822,78 @@ export const count = async (filter = ''): Promise<number | Error> => {
 
 ### Refatorando Controller e vinculando às Providers (#25 - Refatorando a controller de cidade)
 
+```ts
+export const create: RequestHandler = async (
+    req: Request<{}, {}, IBodyProps>,
+    res: Response
+) => {
+    const result = await CidadesProvider.create(req.body);
+
+    if(result instanceof Error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            errors: {
+                default: result.message
+            }
+        });
+    }
+
+    return res.status(StatusCodes.CREATED).json(result);
+};
+```
+
+Inseridor o Provider no Create, juntamente com o Controller
+
 ### Seeds (#27 - Adicionar seed para cidades)
 
+```ts
+import { Knex } from "knex";
+
+import { ETableNames } from "../ETableNames";
+
+export const seed = async (knex: Knex) => {
+    const [{ count }] = await knex(ETableNames.cidade).count<
+        [{ count: Number }]
+    >("* as count");
+
+    if (!Number.isInteger(count) || Number(count) > 0) return;
+
+    const cidadesToInsert = cidadesDeSãoPaulo.map((nomeDaCidade) => ({
+        name: nomeDaCidade,
+    }));
+    await knex(ETableNames.cidade).insert(cidadesToInsert);
+};
+
+const cidadesDeSãoPaulo = [
+    "São Vicente",
+    "Santos",
+    "Praia Grande",
+    "Guarujá",
+    "Bertioga",
+    "Itanhaém",
+];
+```
+
+Necessário colocar para aguardar rodar as seeds antes de startar o servidor, e no jest também
+
+### Tabela Pessoas (#28 - Adicionar model e migration de pessoas)
+
+Ordem de criação:
+
+-   Model `./src/server/database/models/Pessoa.ts`
+    -   Export da model `./src/server/database/models/index.ts`
+-   Enumerador de tabelas `./src/server/database/ETableNames.ts`
+-   Migration `./src/server/database/migration/0001_create_pessoa.ts`
+
+    ```ts
+        // migration
+        table
+        .bigInteger("cityId") // Mesmo tipo da cidade referenciada
+        .index() // Melhora a performance da consulta via indexação
+        .notNullable() // Não pode ser vazio
+        .references('id') // Referencia ao ID
+        .inTable(ETableNames.cidade) // Na tabela (enumerada).Cidade
+        .onUpdate('CASCADE') // Caso o cidade.ID for alterado, muda também nestes
+        .onDelete('RESTRICT'); // Previne a exclusão da tabela referenciada
+    ```
+
+-   
