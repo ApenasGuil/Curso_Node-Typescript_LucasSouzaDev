@@ -896,4 +896,17 @@ Ordem de criação:
         .onDelete('RESTRICT'); // Previne a exclusão da tabela referenciada
     ```
 
--   
+-   Declarar a tipagem das tabelas `./src/server/database/knex/@types/knex.d.ts`
+-   Providers
+    -   Create
+
+        ```ts
+            // Checa se a cidade informada (FK) existe no banco antes de cadastrar a Pessoa
+            const [{ count }] = await Knex(ETableNames.cidade)
+                .where("id", "=", pessoa.cityId)
+                .count<[{ count: number }]>("* as count");
+
+            if (count === 0) {
+                return new Error("A cidade usada no cadastro não foi encontrada");
+            }
+        ```
