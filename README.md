@@ -898,6 +898,7 @@ Ordem de criação:
 
 -   Declarar a tipagem das tabelas `./src/server/database/knex/@types/knex.d.ts`
 -   Providers
+    -   Import variável PessoasProvider `./src/server/database/providers/pessoas/index.ts`
     -   Create
 
         ```ts
@@ -910,3 +911,9 @@ Ordem de criação:
                 return new Error("A cidade usada no cadastro não foi encontrada");
             }
         ```
+-   Controllers `./src/server/controllers/pessoas`
+    -   Import variável PessoasController `./src/server/controllers/pessoas/index.ts`
+    -   Export para Controllers `./src/server/controllers/index.ts`
+-   Rotas `./src/server/routes/index.ts`
+-   Testes manuais `Insomnia ou Postman`
+-   Testes JEST `./tests/pessoas/*`
